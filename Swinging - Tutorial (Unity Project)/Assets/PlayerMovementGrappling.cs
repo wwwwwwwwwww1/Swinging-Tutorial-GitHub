@@ -42,7 +42,14 @@ public class PlayerMovementGrappling : MonoBehaviour
     [Header("Camera Effects")]
     public PlayerCam cam;
     public float grappleFov = 95f;
+    
+    [Header("Charged Jump")]
+    public float minJumpForce = 5f;
+    public float maxJumpForce = 20f;
+    public float chargeSpeed = 30f; 
 
+    private float currentJumpForce;
+    private bool isChargingJump;
     public Transform orientation;
 
     float horizontalInput;
@@ -108,15 +115,27 @@ public class PlayerMovementGrappling : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
 
         // when to jump
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        if (Input.GetKeyDown(jumpKey) && grounded && readyToJump)
         {
-            readyToJump = false;
+            isChargingJump = true;
+            currentJumpForce = minJumpForce;
+        }
+        if (Input.GetKey(jumpKey) && grounded && isChargingJump)
+        {
+            currentJumpForce += chargeSpeed * Time.deltaTime;
+            currentJumpForce = Mathf.Clamp(currentJumpForce, minJumpForce, maxJumpForce);
 
-            Jump();
+            Debug.Log("Cargando: " + currentJumpForce);
+        }
+        if (Input.GetKeyUp(jumpKey) && grounded && isChargingJump)
+        {
+            Debug.Log("Salto con fuerza: " + currentJumpForce);
+            Jump(currentJumpForce);
+            readyToJump = false;
+            isChargingJump = false;
 
             Invoke(nameof(ResetJump), jumpCooldown);
         }
-
         // start crouch
         if (Input.GetKeyDown(crouchKey))
         {
@@ -237,14 +256,15 @@ public class PlayerMovementGrappling : MonoBehaviour
         }
     }
 
-    private void Jump()
+    private void Jump(float customForce)
     {
         exitingSlope = true;
 
-        // reset y velocity
+        
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        
+        rb.AddForce(transform.up * customForce, ForceMode.Impulse);
     }
     private void ResetJump()
     {
