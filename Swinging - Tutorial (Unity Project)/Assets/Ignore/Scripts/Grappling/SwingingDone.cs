@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SwingingDone : MonoBehaviour
 {
+    static public int swingTimes = 0;
+    public bool counted = false;
+
     [Header("References")]
     public LineRenderer lr;
     public Transform gunTip, cam, player;
@@ -30,11 +33,29 @@ public class SwingingDone : MonoBehaviour
     [Header("Input")]
     public KeyCode swingKey = KeyCode.Mouse0;
 
-
+    private void Start()
+    {
+        swingTimes = 0;
+        counted = false;
+    }
     private void Update()
     {
-        if (Input.GetKeyDown(swingKey)) StartSwing();
-        if (Input.GetKeyUp(swingKey)) StopSwing();
+
+
+        if (Input.GetKeyDown(swingKey) && swingTimes <= 2)
+        {
+            if (!counted)
+            {
+                counted = true;
+                swingTimes++;
+            }
+            StartSwing();
+        }
+        if (Input.GetKeyUp(swingKey))
+        {
+            counted = false;
+            StopSwing();
+        }
 
         CheckForSwingPoints();
 

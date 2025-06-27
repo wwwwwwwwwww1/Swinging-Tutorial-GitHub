@@ -93,6 +93,7 @@ public class PlayerMovementGrappling : MonoBehaviour
 
     private void Update()
     {
+        if (grounded) SwingingDone.swingTimes = 0;
         // ground check
         if (!grounded && isChargingJump)
         {
