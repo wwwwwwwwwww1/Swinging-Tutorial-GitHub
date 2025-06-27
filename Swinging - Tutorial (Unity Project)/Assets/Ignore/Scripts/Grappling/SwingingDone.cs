@@ -47,16 +47,12 @@ public class SwingingDone : MonoBehaviour
 
         if (Input.GetKeyDown(swingKey) && swingTimes <= 2)
         {
-            if (!counted)
-            {
-                counted = true;
-                swingTimes++;
-            }
+            
             StartSwing();
         }
         if (Input.GetKeyUp(swingKey))
         {
-            counted = false;
+            
             StopSwing();
         }
 
@@ -122,7 +118,11 @@ public class SwingingDone : MonoBehaviour
         if(GetComponent<Grappling>() != null)
             GetComponent<Grappling>().StopGrapple();
         pm.ResetRestrictions();
-
+        if (!counted)
+        {
+            counted = true;
+            swingTimes++;
+        }
         pm.swinging = true;
 
         swingPoint = predictionHit.point;
@@ -148,7 +148,7 @@ public class SwingingDone : MonoBehaviour
     public void StopSwing()
     {
         pm.swinging = false;
-
+        counted = false;
         lr.positionCount = 0;
 
         Destroy(joint);

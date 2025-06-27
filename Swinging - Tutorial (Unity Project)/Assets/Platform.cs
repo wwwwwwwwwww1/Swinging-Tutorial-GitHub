@@ -6,7 +6,9 @@ public class Platform : MonoBehaviour
 {
     public float distance = 10f;           
     public float speedForward = 15f;      
-    public float speedReturn = 5f;        
+    public float speedReturn = 5f;
+
+    public bool vertical = false, side = false;
 
     private Vector3 startPos;
     private Vector3 endPos;
@@ -16,8 +18,20 @@ public class Platform : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
-        endPos = startPos + transform.right * distance;  
-        rb = GetComponent<Rigidbody>();
+        if (!vertical && !side)
+        {
+            endPos = startPos + transform.right * distance;
+        }
+        else if (vertical && !side)
+        {
+            endPos = startPos + transform.up * distance;
+        }
+        else if (!vertical && side)
+        {
+            endPos = startPos + transform.forward * distance;
+        }
+
+            rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
     }
 

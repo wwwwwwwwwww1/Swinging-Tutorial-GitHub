@@ -12,8 +12,8 @@ public class PlayerCam : MonoBehaviour
     public Transform orientation;
     public Transform camHolder;
 
-    float xRotation;
-    float yRotation;
+    public float xRotation;
+    public float yRotation;
 
     [Header("Fov")]
     public bool useFluentFov;
@@ -27,6 +27,7 @@ public class PlayerCam : MonoBehaviour
 
     private void Start()
     {
+        yRotation = -90;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
