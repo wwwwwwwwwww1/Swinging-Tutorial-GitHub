@@ -56,6 +56,7 @@ public class PlayerMovementGrappling : MonoBehaviour
     float verticalInput;
 
     Vector3 moveDirection;
+    Vector3 jumpDirection;
 
     Rigidbody rb;
 
@@ -206,6 +207,7 @@ public class PlayerMovementGrappling : MonoBehaviour
     {
         if (activeGrapple) return;
         if (swinging) return;
+        if (isChargingJump) return;
 
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
@@ -263,8 +265,12 @@ public class PlayerMovementGrappling : MonoBehaviour
         
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
-        
+        jumpDirection = orientation.forward;
+        //-3.719
+        Debug.Log("forward: " + orientation.forward + ", right: " + orientation.right);
+
         rb.AddForce(transform.up * customForce, ForceMode.Impulse);
+        rb.AddForce(jumpDirection.normalized * customForce, ForceMode.Impulse);
     }
     private void ResetJump()
     {
