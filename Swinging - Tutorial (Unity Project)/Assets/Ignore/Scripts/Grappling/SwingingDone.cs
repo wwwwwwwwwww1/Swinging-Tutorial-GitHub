@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 public class SwingingDone : MonoBehaviour
 {
     static public int swingTimes = 0;
@@ -33,6 +33,9 @@ public class SwingingDone : MonoBehaviour
     [Header("Input")]
     public KeyCode swingKey = KeyCode.Mouse0;
 
+    [Header("UI")]
+    public TextMeshProUGUI swingTimesText;
+
     private void Start()
     {
         swingTimes = 0;
@@ -58,6 +61,7 @@ public class SwingingDone : MonoBehaviour
         }
 
         CheckForSwingPoints();
+        swingTimesText.text = swingTimes + " /3";
 
         if (joint != null) OdmGearMovement();
     }
