@@ -291,9 +291,7 @@ public class PlayerMovementAdvanced : MonoBehaviour
 
     private void MovePlayer()
     {
-        if (climbingScript.exitingWall) return;
-        if (climbingScriptDone.exitingWall) return;
-        if (restricted) return;
+       
 
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
