@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class PlayerMovementGrappling : MonoBehaviour
 {
@@ -46,11 +47,14 @@ public class PlayerMovementGrappling : MonoBehaviour
     [Header("Charged Jump")]
     public float minJumpForce = 5f;
     public float maxJumpForce = 20f;
-    public float chargeSpeed = 30f; 
-
+    public float chargeSpeed = 30f;
+    
+    [Header("UI")]
+    public Slider jumpPowerSlider;
     private float currentJumpForce;
     private bool isChargingJump;
     public Transform orientation;
+    public GameObject jumpPowerSliderObject;
 
     float horizontalInput;
     float verticalInput;
@@ -81,7 +85,7 @@ public class PlayerMovementGrappling : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-
+        jumpPowerSliderObject.SetActive(false);
         readyToJump = true;
 
         startYScale = transform.localScale.y;
@@ -120,11 +124,14 @@ public class PlayerMovementGrappling : MonoBehaviour
         {
             isChargingJump = true;
             currentJumpForce = minJumpForce;
+            jumpPowerSliderObject.SetActive(true);
         }
         if (Input.GetKey(jumpKey) && grounded && isChargingJump)
         {
             currentJumpForce += chargeSpeed * Time.deltaTime;
             currentJumpForce = Mathf.Clamp(currentJumpForce, minJumpForce, maxJumpForce);
+            float normalized = (currentJumpForce - minJumpForce) / (maxJumpForce - minJumpForce);
+            jumpPowerSlider.value = normalized;
 
             Debug.Log("Cargando: " + currentJumpForce);
         }
@@ -134,7 +141,8 @@ public class PlayerMovementGrappling : MonoBehaviour
             Jump(currentJumpForce);
             readyToJump = false;
             isChargingJump = false;
-
+            jumpPowerSlider.value = 0;
+            jumpPowerSliderObject.SetActive(false);
             Invoke(nameof(ResetJump), jumpCooldown);
         }
         // start crouch
