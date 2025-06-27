@@ -94,6 +94,13 @@ public class PlayerMovementGrappling : MonoBehaviour
     private void Update()
     {
         // ground check
+        if (!grounded && isChargingJump)
+        {
+            isChargingJump = false;
+            jumpPowerSlider.value = 0;
+            jumpPowerSliderObject.SetActive(false);
+            Debug.Log("Carga de salto cancelada por estar en el aire.");
+        }
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
         MyInput();
@@ -208,6 +215,7 @@ public class PlayerMovementGrappling : MonoBehaviour
         else
         {
             state = MovementState.air;
+            
         }
     }
 
