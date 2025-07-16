@@ -16,19 +16,19 @@ public class Respawn : MonoBehaviour
     {
         if (currentCheck == 1)
         {
-            transform.position = new Vector3(transform.position.x, 116.5f - 9.4f, transform.position.z); // 125.9
+            transform.position = new Vector3(transform.position.x, 116.5f - 9.4f + 133.5f, transform.position.z); // 125.9
         }
         else if (currentCheck == 2)
         {
-            transform.position = new Vector3(transform.position.x, 136.8f - 9.4f, transform.position.z);            
+            transform.position = new Vector3(transform.position.x, 136.8f - 9.4f + 133.5f, transform.position.z);            
         }
         else if (currentCheck == 5)
         {
-            transform.position = new Vector3(transform.position.x, 37f - 9.4f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, 37f - 9.4f + 133.5f, transform.position.z);
         }
         else if (currentCheck == 6)
         {
-            transform.position = new Vector3(transform.position.x, 80.6f - 9.4f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, 80.6f - 9.4f + 133.5f, transform.position.z);
         }
     }
 

@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Swinging.unity
     guid: ce076a4bc11d33442b1927d7b2a0803f
+  - enabled: 1
+    path: Assets/InsideTree.unity
+    guid: ca44a4549d40a91478c92b6753b4ac59
   m_configObjects: {}
