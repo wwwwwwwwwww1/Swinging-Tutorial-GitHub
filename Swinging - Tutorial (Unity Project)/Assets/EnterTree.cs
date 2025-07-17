@@ -11,7 +11,7 @@ public class EnterTree : MonoBehaviour
     {
         if (other == player)
         {
-            SceneManager.LoadScene("InsideTree");
+            SceneManager.LoadScene("INSIDE TREE 2");
         }
 
     }

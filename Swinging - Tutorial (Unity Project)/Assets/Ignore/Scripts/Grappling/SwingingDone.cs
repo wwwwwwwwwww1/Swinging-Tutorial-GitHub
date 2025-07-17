@@ -40,6 +40,8 @@ public class SwingingDone : MonoBehaviour
     {
         swingTimes = 0;
         counted = false;
+        StartSwing();
+        StopSwing();
     }
     private void Update()
     {
