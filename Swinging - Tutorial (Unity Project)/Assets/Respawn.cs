@@ -22,6 +22,10 @@ public class Respawn : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, 136.8f - 9.4f + 133.5f, transform.position.z);            
         }
+        else if (currentCheck == 3)
+        {
+            transform.position = new Vector3(transform.position.x, 216.1f - 9.4f + 133.5f, transform.position.z);
+        }
         else if (currentCheck == 4)
         {
             transform.position = new Vector3(transform.position.x, 0.2f - 9.4f + 133.5f, transform.position.z);
@@ -45,6 +49,10 @@ public class Respawn : MonoBehaviour
         else if (currentCheck == 9)
         {
             transform.position = new Vector3(transform.position.x, -58.4f - 9.4f + 133.5f, transform.position.z);
+        }
+        else if (currentCheck == 10)
+        {
+            transform.position = new Vector3(transform.position.x, 204.14f - 9.4f + 133.5f, transform.position.z);
         }
     }
 
