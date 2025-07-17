@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 public class SwingingDone : MonoBehaviour
 {
-    static public int swingTimes = 0;
-    public bool counted = false;
+   static public int swingTimes = 0;
 
     [Header("References")]
     public LineRenderer lr;
@@ -34,34 +34,44 @@ public class SwingingDone : MonoBehaviour
     public KeyCode swingKey = KeyCode.Mouse0;
 
     [Header("UI")]
-    public TextMeshProUGUI swingTimesText;
+    public Image[] swingIcons; // Asignar 3 imágenes
+    public Color usedColor = Color.gray;
+    public Color readyColor = Color.white;
+
+    private Vector3 currentGrapplePosition;
 
     private void Start()
     {
         swingTimes = 0;
-        counted = false;
-        StartSwing();
-        StopSwing();
+        UpdateSwingIcons(); // Actualiza los íconos al iniciar
+        StartSwing(); // Opcional, puede removerse
+        StopSwing();  // Opcional, puede removerse
     }
+
     private void Update()
     {
-
-
-        if (Input.GetKeyDown(swingKey) && swingTimes <= 2)
+        if (Input.GetKeyDown(swingKey) && swingTimes < 3)
         {
-            
             StartSwing();
         }
+
         if (Input.GetKeyUp(swingKey))
         {
-            
             StopSwing();
         }
 
-        CheckForSwingPoints();
-        swingTimesText.text = swingTimes + " /3";
+        // Reset manual (para pruebas)
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetSwings();
+        }
 
-        if (joint != null) OdmGearMovement();
+        CheckForSwingPoints();
+
+        if (joint != null)
+        {
+            OdmGearMovement();
+        }
     }
 
     private void LateUpdate()
@@ -74,34 +84,27 @@ public class SwingingDone : MonoBehaviour
         if (joint != null) return;
 
         RaycastHit sphereCastHit;
-        Physics.SphereCast(cam.position, predictionSphereCastRadius, cam.forward, 
+        Physics.SphereCast(cam.position, predictionSphereCastRadius, cam.forward,
                             out sphereCastHit, maxSwingDistance, whatIsGrappleable);
 
         RaycastHit raycastHit;
-        Physics.Raycast(cam.position, cam.forward, 
+        Physics.Raycast(cam.position, cam.forward,
                             out raycastHit, maxSwingDistance, whatIsGrappleable);
 
         Vector3 realHitPoint;
 
-        // Option 1 - Direct Hit
         if (raycastHit.point != Vector3.zero)
             realHitPoint = raycastHit.point;
-
-        // Option 2 - Indirect (predicted) Hit
         else if (sphereCastHit.point != Vector3.zero)
             realHitPoint = sphereCastHit.point;
-
-        // Option 3 - Miss
         else
             realHitPoint = Vector3.zero;
 
-        // realHitPoint found
         if (realHitPoint != Vector3.zero)
         {
             predictionPoint.gameObject.SetActive(true);
             predictionPoint.position = realHitPoint;
         }
-        // realHitPoint not found
         else
         {
             predictionPoint.gameObject.SetActive(false);
@@ -110,21 +113,19 @@ public class SwingingDone : MonoBehaviour
         predictionHit = raycastHit.point == Vector3.zero ? sphereCastHit : raycastHit;
     }
 
-
     private void StartSwing()
     {
-        // return if predictionHit not found
         if (predictionHit.point == Vector3.zero) return;
+        if (swingTimes >= 3) return;
 
-        // deactivate active grapple
-        if(GetComponent<Grappling>() != null)
+        if (GetComponent<Grappling>() != null)
             GetComponent<Grappling>().StopGrapple();
+
         pm.ResetRestrictions();
-        if (!counted)
-        {
-            counted = true;
-            swingTimes++;
-        }
+
+        swingTimes++;
+        UpdateSwingIcons();
+
         pm.swinging = true;
 
         swingPoint = predictionHit.point;
@@ -133,12 +134,9 @@ public class SwingingDone : MonoBehaviour
         joint.connectedAnchor = swingPoint;
 
         float distanceFromPoint = Vector3.Distance(player.position, swingPoint);
-
-        // the distance grapple will try to keep from grapple point. 
         joint.maxDistance = distanceFromPoint * 0.8f;
         joint.minDistance = distanceFromPoint * 0.25f;
 
-        // customize values as you like
         joint.spring = 4.5f;
         joint.damper = 7f;
         joint.massScale = 4.5f;
@@ -150,54 +148,55 @@ public class SwingingDone : MonoBehaviour
     public void StopSwing()
     {
         pm.swinging = false;
-        counted = false;
         lr.positionCount = 0;
-
         Destroy(joint);
     }
 
     private void OdmGearMovement()
     {
-        // right
         if (Input.GetKey(KeyCode.D)) rb.AddForce(orientation.right * horizontalThrustForce * Time.deltaTime);
-        // left
         if (Input.GetKey(KeyCode.A)) rb.AddForce(-orientation.right * horizontalThrustForce * Time.deltaTime);
-
-        // forward
         if (Input.GetKey(KeyCode.W)) rb.AddForce(orientation.forward * horizontalThrustForce * Time.deltaTime);
 
-        // shorten cable
         if (Input.GetKey(KeyCode.Space))
         {
             Vector3 directionToPoint = swingPoint - transform.position;
             rb.AddForce(directionToPoint.normalized * forwardThrustForce * Time.deltaTime);
 
             float distanceFromPoint = Vector3.Distance(transform.position, swingPoint);
-
             joint.maxDistance = distanceFromPoint * 0.8f;
             joint.minDistance = distanceFromPoint * 0.25f;
         }
-        // extend cable
+
         if (Input.GetKey(KeyCode.S))
         {
             float extendedDistanceFromPoint = Vector3.Distance(transform.position, swingPoint) + extendCableSpeed;
-
             joint.maxDistance = extendedDistanceFromPoint * 0.8f;
             joint.minDistance = extendedDistanceFromPoint * 0.25f;
         }
     }
 
-    private Vector3 currentGrapplePosition;
-
     private void DrawRope()
     {
-        // if not grappling, don't draw rope
         if (!joint) return;
 
-        currentGrapplePosition = 
-            Vector3.Lerp(currentGrapplePosition, swingPoint, Time.deltaTime * 8f);
+        currentGrapplePosition = Vector3.Lerp(currentGrapplePosition, swingPoint, Time.deltaTime * 8f);
 
         lr.SetPosition(0, gunTip.position);
         lr.SetPosition(1, currentGrapplePosition);
+    }
+
+    private void UpdateSwingIcons()
+    {
+        for (int i = 0; i < swingIcons.Length; i++)
+        {
+            swingIcons[i].color = (i < swingTimes) ? usedColor : readyColor;
+        }
+    }
+
+    public void ResetSwings()
+    {
+        swingTimes = 0;
+        UpdateSwingIcons();
     }
 }
