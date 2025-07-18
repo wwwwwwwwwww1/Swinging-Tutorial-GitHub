@@ -5,8 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class Reset : MonoBehaviour
 {
+    [SerializeField] bool thisWin = false;
     private void OnTriggerEnter(Collider other)
     {
-        SceneManager.LoadScene("Swinging");
+        if (thisWin) SceneManager.LoadScene("winScene");
+        else SceneManager.LoadScene("Swinging");
     }
 }

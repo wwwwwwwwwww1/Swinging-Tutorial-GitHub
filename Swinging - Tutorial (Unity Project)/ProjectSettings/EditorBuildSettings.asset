@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/material arbol/INSIDE TREE 2.unity
     guid: 22fad4e36b74fb2459337f0dbb219b99
+  - enabled: 1
+    path: Assets/winScene.unity
+    guid: 7b64417d0dd49f3499772da2f07bfc8a
   m_configObjects: {}
