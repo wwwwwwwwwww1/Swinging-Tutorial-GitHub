@@ -56,6 +56,11 @@ public class PlayerMovementGrappling : MonoBehaviour
     public Transform orientation;
     public GameObject jumpPowerSliderObject;
 
+    [Header("Audio")]
+    public AudioSource chargeSource; 
+    public AudioSource jumpSource;   
+
+
     float horizontalInput;
     float verticalInput;
 
@@ -105,6 +110,8 @@ public class PlayerMovementGrappling : MonoBehaviour
             jumpPowerSlider.value = 0;
             jumpPowerSliderObject.SetActive(false);
             Debug.Log("Carga de salto cancelada por estar en el aire.");
+            if (chargeSource && chargeSource.isPlaying)
+                chargeSource.Stop();
         }
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
@@ -144,7 +151,8 @@ public class PlayerMovementGrappling : MonoBehaviour
             currentJumpForce = Mathf.Clamp(currentJumpForce, minJumpForce, maxJumpForce);
             float normalized = (currentJumpForce - minJumpForce) / (maxJumpForce - minJumpForce);
             jumpPowerSlider.value = normalized;
-
+            if (chargeSource && !chargeSource.isPlaying)
+                chargeSource.Play();
             Debug.Log("Cargando: " + currentJumpForce);
         }
         if (Input.GetKeyUp(jumpKey) && grounded && isChargingJump)
@@ -156,6 +164,12 @@ public class PlayerMovementGrappling : MonoBehaviour
             jumpPowerSlider.value = 0;
             jumpPowerSliderObject.SetActive(false);
             Invoke(nameof(ResetJump), jumpCooldown);
+            if (chargeSource && chargeSource.isPlaying)
+                chargeSource.Stop();
+
+           
+            if (jumpSource)
+                jumpSource.Play();
         }
         // start crouch
         if (Input.GetKeyDown(crouchKey))

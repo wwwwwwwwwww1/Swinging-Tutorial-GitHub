@@ -37,7 +37,11 @@ public class SwingingDone : MonoBehaviour
     public Image[] swingIcons; // Asignar 3 imágenes
     public Color usedColor = Color.gray;
     public Color readyColor = Color.white;
-
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip swingAttachClip;
+    
+    
     private Vector3 currentGrapplePosition;
 
     private void Start()
@@ -143,6 +147,7 @@ public class SwingingDone : MonoBehaviour
 
         lr.positionCount = 2;
         currentGrapplePosition = gunTip.position;
+        audioSource.Play();
     }
 
     public void StopSwing()
