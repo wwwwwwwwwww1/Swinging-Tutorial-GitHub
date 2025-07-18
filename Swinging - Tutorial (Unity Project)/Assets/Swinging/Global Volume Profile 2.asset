@@ -37,10 +37,10 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 0.75
+    m_Value: 41
   intensity:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 9.38
   scatter:
     m_OverrideState: 0
     m_Value: 0.7
@@ -105,7 +105,7 @@ MonoBehaviour:
     m_Value: {x: 1, y: 0.93424135, z: 0.913834, w: 0}
   highlights:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.9687412, z: 0.90987104, w: 0}
+    m_Value: {x: 0.99626654, y: 1, z: 0.99965435, w: 0}
   shadowsStart:
     m_OverrideState: 0
     m_Value: 0
