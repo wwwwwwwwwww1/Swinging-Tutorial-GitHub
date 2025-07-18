@@ -40,7 +40,7 @@ public class Respawn : MonoBehaviour
         }
         else if (currentCheck == 7)
         {
-            transform.position = new Vector3(transform.position.x, -143.6f - 9.4f + 133.5f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, -131f - 9.4f + 133.5f, transform.position.z);
         }
         else if (currentCheck == 8)
         {
